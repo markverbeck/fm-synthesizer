@@ -1,0 +1,134 @@
+<div class="synthesizer-panel">
+  <div class="controls-container">
+    <div class="oscillator-section">
+      <h3>Oscillator</h3>
+      <div class="waveform-selector">
+        <button
+          *ngFor="let waveform of (waveforms$ | async)"
+          (click)="updateWaveform(waveform)"
+          [class.active]="(waveform$ | async) === waveform"
+        >
+          {{ waveform }}
+        </button>
+      </div>
+    </div>
+
+    <div class="envelope-section">
+      <h3>Envelope</h3>
+      <div class="slider-container">
+        <label for="attack-control">Attack</label>
+        <input type="range" id="attack-control" min="0" max="0.5" step="0.01" #attackSlide (input)="updateAttackTime((attackSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+      <div class="slider-container">
+        <label for="release-control">Release</label>
+        <input type="range" id="release-control" min="0" max="0.5" step="0.01" #releaseSlide (input)="updateReleaseTime((releaseSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+    </div>
+
+    <div class="vibrato-section">
+      <h3>Vibrato</h3>
+      <div class="slider-container">
+        <label for="vibrato-amount">Amount</label>
+        <input type="range" id="vibrato-amount" min="0" max="0.5" step="0.01" #vibratoAmountSlide (input)="updateVibratoAmount((vibratoAmountSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+      <div class="slider-container">
+        <label for="vibrato-speed">Speed</label>
+        <input type="range" id="vibrato-speed" min="0" max="30" step="1" #vibratoSpeedSlide (input)="updateVibratoSpeed((vibratoSpeedSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+    </div>
+
+    <div class="delay-section">
+      <h3>Delay</h3>
+      <div class="slider-container">
+        <label for="delay-time">Time</label>
+        <input type="range" id="delay-time" min="0" max="1" step="0.01" #delayTimeSlide (input)="updateDelayTime((delayTimeSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+      <div class="slider-container">
+        <label for="delay-feedback">Feedback</label>
+        <input type="range" id="delay-feedback" min="0" max="0.9" step="0.01" #delayFeedbackSlide (input)="updateDelayFeedback((delayFeedbackSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+      <div class="slider-container">
+        <label for="delay-amount">Amount</label>
+        <input type="range" id="delay-amount" min="0" max="0.9" step="0.01" #delayAmountSlide (input)="updateDelayAmount((delayAmountSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+    </div>
+
+    <div class="volume-section">
+      <h3>Volume</h3>
+      <div class="slider-container">
+        <label for="volume">Master</label>
+        <input id="volume" type="range" min="0" max="1" step="0.01" #volumeSlider (input)="changeVolume((volumeSlider.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+    </div>
+
+    <div class="fm-section">
+      <h3>FM Modulation</h3>
+      <div class="slider-container">
+        <label for="modulation-index">Index</label>
+        <input type="range" id="modulation-index" min="0" max="20" step="0.1" #modulationIndexSlide (input)="updateModulationIndex((modulationIndexSlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+      <div class="slider-container">
+        <label for="harmonicity">Harmonicity</label>
+        <input type="range" id="harmonicity" min="0.1" max="20" step="0.1" #harmonicitySlide (input)="updateHarmonicityAmount((harmonicitySlide.value))">
+        <hr *ngFor="let line of indicatorLines"
+          [style.backgroundColor]="line.color"
+          [style.top]="line.top"
+          class="indicator-line">
+      </div>
+    </div>
+  </div>
+
+  <div class="piano-keyboard-container">
+    <div class="piano-keyboard" tabindex="0" (keydown)="handleKeyDown($event)" (keyup)="handleKeyUp($event)"
+         (mousedown)="handleMouseDown($event)" (mouseup)="handleMouseUp($event)" (mouseleave)="handleMouseLeave($event)">
+      <div
+        *ngFor="let note of pianoNoteFreq; let i = index"
+        class="key"
+        [class.white]="!note.note.includes('#') && !note.note.includes('/')"
+        [class.black]="note.note.includes('#') || note.note.includes('/')"
+        [attr.data-frequency]="note.frequency"
+        [attr.data-note]="note.note"
+        tabindex="-1"
+        [class.active]="activeNotes[note.frequency]"
+      >
+        <span class="note-name">{{ note.note.split('/')[0] }}</span>
+      </div>
+    </div>
+  </div>
+</div>
